@@ -3,7 +3,7 @@
 A campus OLX for students: buy and sell second-hand things within college.
 Built for the BMI–TREP **SDG Action Lab** project (**SDG 12: Responsible Consumption and Production**).
 
-**Live site:** https://akankshacodeshere.github.io/passiton/
+**Live site:** https://akankshacodeshere.github.io/PassItOn/
 
 ## How it works (like OLX)
 1. Student logs in with college email + one-time code (only `@bennett.edu.in`).
