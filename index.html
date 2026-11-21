@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PassItOn · campus marketplace</title>
+  <meta name="description" content="Buy and sell second-hand things with students at your college.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%231a56db'/%3E%3Cpath d='M26 52h40M52 34l18 18-18 18' stroke='%23ffce32' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#" aria-label="PassItOn home">
+      <svg viewBox="0 0 40 40" width="34" height="34"><rect width="40" height="40" rx="8" fill="#1a56db"/><path d="M10 21h16M20 13l8 8-8 8" stroke="#ffce32" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Pass<b>It</b>On</span>
+    </a>
+    <div class="search">
+      <select id="hcat" aria-label="Category"></select>
+      <input id="q" placeholder="Search for a calculator, cycle, book..." aria-label="Search listings">
+      <button id="go" aria-label="Search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button>
+    </div>
+    <div class="right">
+      <button id="helpBtn" class="textbtn">Help</button>
+      <span id="who"></span><span id="modTag" class="modtag" hidden>MOD</span>
+      <button id="authBtn" class="textbtn strong">Log in</button>
+      <button id="postBtn" class="sell"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Sell</button>
+    </div>
+  </div>
+</header>
+
+<section class="wrap tilesec">
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<main class="wrap layout">
+  <aside class="filters" id="filters">
+    <div class="fhead"><b>Filters</b><button class="textbtn" id="reset">Clear all</button></div>
+    <div class="fgroup"><label for="pmin">Price (₹)</label><div class="range"><input id="pmin" type="number" min="0" placeholder="Min"><span>–</span><input id="pmax" type="number" min="0" placeholder="Max"></div></div>
+    <div class="fgroup"><label>Condition</label>
+      <label class="chk"><input type="checkbox" class="cond" value="Like new"> Like new</label>
+      <label class="chk"><input type="checkbox" class="cond" value="Good"> Good</label>
+      <label class="chk"><input type="checkbox" class="cond" value="Well used"> Well used</label></div>
+    <div class="fgroup"><label for="ploc">Pickup spot</label><input id="ploc" placeholder="e.g. Block C, library"></div>
+    <div class="fgroup"><label for="sort">Sort by</label>
+      <select id="sort"><option value="new">Newest first</option><option value="lo">Price: low to high</option><option value="hi">Price: high to low</option></select></div>
+    <label class="chk"><input type="checkbox" id="onlySaved"> Saved items only</label>
+  </aside>
+
+  <section class="results">
+    <div class="rhead">
+      <div class="tabs">
+        <button data-v="browse" class="on">Browse</button>
+        <button data-v="mine">My listings</button>
+        <button data-v="queue" id="tabQueue" hidden>Review queue <i id="qn">0</i></button>
+      </div>
+      <div class="vtools">
+        <button class="textbtn filtbtn" id="filtBtn">Filters</button>
+        <button class="vbtn on" id="vGrid" aria-label="Grid view" title="Grid"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg></button>
+        <button class="vbtn" id="vList" aria-label="List view" title="List"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg></button>
+      </div>
+    </div>
+    <h1 id="heading">Fresh listings</h1>
+    <p class="info" id="info"></p>
+    <div id="feed" class="grid"></div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div><b>PassItOn</b><br>A campus marketplace for students.<br>Built for the BMI–TREP SDG Action Lab (SDG 12).</div>
+    <div><b>Help</b><br><button class="textbtn" id="helpLink2">Posting rules and safety</button><br>Problem or question? <span id="adm"></span></div>
+  </div>
+</footer>
+<div id="snack" role="status"></div>
+
+<dialog id="authD">
+  <h2 id="authTitle">Log in with your college email</h2><p class="why" id="authWhy" hidden></p>
+  <div id="step1"><p class="mu">We'll send a one-time code. Only your college email works.</p>
+    <input id="em" type="email" placeholder="you@bennett.edu.in" aria-label="College email"><p><button id="send" class="btn primary">Send code</button></p></div>
+  <div id="step2" hidden>
+    <div id="mailBox" class="mail" hidden><small>Email preview</small><b>Your PassItOn code</b><span>Use this code to log in:</span><strong id="dcode"></strong></div>
+    <p class="mu">Enter the code we sent you.</p>
+    <input id="otp" inputmode="numeric" autocomplete="one-time-code" placeholder="Code" aria-label="Code">
+    <p><button id="verify" class="btn primary">Verify</button> <button id="resend" class="btn ghost">Send again</button></p></div>
+  <p class="err" id="aerr"></p><button class="btn ghost sm close">Close</button>
+</dialog>
+
+<dialog id="postD">
+  <h2>Post your item</h2>
+  <div class="inbox">A moderator reviews every post before it goes live. Use a clear photo, no phone numbers or links, and only post things you own.</div>
+  <label>Title<input id="ti" maxlength="60" placeholder="e.g. Casio fx-991EX calculator"></label>
+  <div class="two"><label>Category<select id="ca"></select></label><label>Price in ₹ (0 = free)<input id="pr" type="number" min="0"></label></div>
+  <div class="two"><label>Condition<select id="co"><option>Like new</option><option>Good</option><option>Well used</option></select></label>
+    <label>Pickup spot<input id="pk" maxlength="40" list="spots" placeholder="e.g. Hostel gate"></label></div>
+  <datalist id="spots"><option value="Library"><option value="Canteen"><option value="Main gate"><option value="Hostel gate"><option value="Academic block"></datalist>
+  <label>Description<textarea id="de" rows="3" maxlength="300" placeholder="Age, any flaws, when you can meet"></textarea></label>
+  <label>Photo<input id="ph" type="file" accept="image/*"></label><img id="prev" alt="" hidden>
+  <label class="agree"><input type="checkbox" id="agree"> I own this item and I will meet buyers in a public place.</label>
+  <p class="err" id="perr"></p>
+  <button id="submit" class="btn primary">Send for approval</button> <button class="btn ghost close">Cancel</button>
+</dialog>
+
+<dialog id="detailD" class="big">
+  <button class="x close" aria-label="Close">✕</button>
+  <p class="crumb" id="dCrumb"></p>
+  <div class="dgrid">
+    <div class="dimg" id="dImg"></div>
+    <div class="dinfo">
+      <div class="dprice" id="dPrice"></div>
+      <h2 id="dTitle"></h2>
+      <p class="mu" id="dMeta"></p>
+      <div class="seller"><span class="av" id="dAv"></span><div><b id="dName"></b><small>College email verified</small></div></div>
+      <div id="dActions"></div>
+      <div id="dReveal" class="reveal" hidden>
+        <p><b>Seller email:</b> <span id="dEmail"></span></p>
+        <a class="btn primary" id="dMail" href="#">Write an email</a>
+        <ul class="tipsl"><li>Meet in a busy campus spot, in daytime.</li><li>Check the item before paying. No advance payments.</li><li>Never share OTPs or bank details.</li></ul>
+      </div>
+    </div>
+  </div>
+  <h3>Description</h3><p id="dDesc" class="desc-full"></p>
+  <h3>Details</h3><dl class="rows" id="dRows"></dl>
+</dialog>
+
+<dialog id="helpD" class="mid">
+  <button class="x close" aria-label="Close">✕</button>
+  <h2>How PassItOn works</h2>
+  <ol class="how"><li>Log in with your college email. We send you a code.</li><li>Post your item with a photo, price and pickup spot.</li><li>A student moderator reviews it. Approved posts go live.</li><li>Buyers contact you by email. Meet on campus, then mark the item sold.</li></ol>
+  <div class="two-col">
+    <div class="panel ok"><h3>Will be approved</h3><ul><li>Books, notes, calculators, electronics</li><li>Lab equipment, hostel items, clothes</li><li>Cycles, sports gear, kitchen items</li><li>Clear photo, honest details</li></ul></div>
+    <div class="panel no"><h3>Will be rejected</h3><ul><li>Illegal or unsafe items</li><li>Solved assignments, exam papers</li><li>Stolen, fake or copied items</li><li>Phone numbers or links in the post</li><li>Blurry photos, vague details, scams</li></ul></div>
+  </div>
+  <h3>Staying safe</h3>
+  <ul class="tipsl"><li>Meet in busy campus places during the day.</li><li>Check the item before paying. Never pay in advance.</li><li>Use Report on anything suspicious. Three reports hide a listing.</li><li>Each student can have 5 active posts. Posts expire after 30 days and can be reposted.</li></ul>
+</dialog>
+
+<dialog id="repD">
+  <h2>Report this listing</h2>
+  <label>What's wrong?<select id="rSel"><option>Not an allowed item</option><option>Looks like a scam</option><option>Spam or fake listing</option><option>Wrong or misleading details</option><option>Other</option></select></label>
+  <p><button id="rSend" class="btn primary">Send report</button> <button class="btn ghost close">Cancel</button></p>
+</dialog>
+
+<dialog id="rejD">
+  <h2>Reject this listing</h2>
+  <label>Reason (the seller will see this)<select id="jSel"><option>Item not allowed</option><option>Photo missing or unclear</option><option>Phone number or link in the post</option><option>Details too vague</option><option>Looks like a scam</option><option>Other</option></select></label>
+  <p><button id="jSend" class="btn primary">Reject</button> <button class="btn ghost close">Cancel</button></p>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
